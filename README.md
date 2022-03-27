@@ -118,3 +118,12 @@ Massive thanks to all of the open source community who have contributed features
 I do this as a personal project, and a few people have expressed interested in donating to keep the project going, this will simply go back into buying test hardware and/or possibly coffee.
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XVS44CZYFPCJJ)
+
+## Package
+node --version
+v14.0.0
+npm install cross-env
+npm install -g electron
+npm -g install eslint-cli
+npm i eslint --save-dev
+npm run lint:fix && ./node_modules/.bin/electron-rebuild
