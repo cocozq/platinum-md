@@ -11,3 +11,4 @@ thumbs.db
 !.gitkeep
 design-files
 resources/netmd-py/*.pyc
+platinum-md-win32-x64/

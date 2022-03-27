@@ -140,6 +140,7 @@ const homedir = require('os').homedir()
 const del = require('del')
 const Store = require('electron-store')
 const store = new Store()
+const iconv = require('encoding-japanese')
 export default {
   data () {
     return {
@@ -293,7 +294,7 @@ export default {
         })
         netmdcli.stdout.on('data', data => {
           // buffer output from netmdcli
-          stringData += data.toString()
+          stringData += new TextDecoder('gb2312').decode(data)
         })
         netmdcli.on('close', (code) => {
           // on exit, process the output data
@@ -313,6 +314,17 @@ export default {
             let results = Object.keys(jsonData.tracks).map((key) => {
               return jsonData.tracks[key]
             })
+
+            // convert Shift-JIS to utf-8
+            results.forEach((item) => {
+              // item.name = iconv.convert(item.name, {
+              //   to: 'UTF8',
+              //   from: 'SJIS',
+              //   type: 'string'
+              // })
+              console.log(decodeURI(item.name))
+            })
+
             this.tracks = results
             console.log(results)
             console.log(this.info.recordedTime !== '00:00:00.00' && this.tracks.length === 0)
@@ -429,6 +441,18 @@ export default {
       return new Promise((resolve, reject) => {
         trackNo = parseInt(this.renameTrackId, 10)
         console.log(trackNo + ':' + this.renameTrackName)
+
+        let encoder = new TextEncoder('gb2312')
+        let codes = encoder.encode(this.renameTrackName)
+        let encoding = iconv.detect(codes)
+        console.log(encoding)
+        let convNameArr = iconv.convert(codes, {
+          to: 'SJIS',
+          from: 'gb2312'
+        })
+
+        let newName = iconv.codeToString(convNameArr)
+        console.log(newName)
         let netmdcli = require('child_process').spawn(netmdcliPath, ['rename', trackNo, this.renameTrackName])
         netmdcli.on('close', (code) => {
           console.log(`child process exited with code ${code}`)

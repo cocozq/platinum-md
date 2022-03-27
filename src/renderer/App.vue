@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'platinum-md'
+    name: 'platinum-md by cocozq'
   }
 </script>
 
