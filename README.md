@@ -124,6 +124,8 @@ node --version
 v14.0.0
 npm install cross-env
 npm install -g electron
+npm install electron --save-dev
 npm -g install eslint-cli
 npm i eslint --save-dev
 npm run lint:fix && ./node_modules/.bin/electron-rebuild
+npm rebuild node-sass
