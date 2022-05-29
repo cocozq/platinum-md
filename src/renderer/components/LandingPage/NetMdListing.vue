@@ -131,7 +131,7 @@
 <script>
 import bus from '@/bus'
 import { netmdcliPath, himdcliPath } from '@/binaries'
-import { convertAudio, ensureDirSync } from '@/common'
+import { convertAudio, ensureDirSync, sanitizeName } from '@/common'
 import { sonyVid, sharpVid, sonyMDPids, sonyHiMDPids, sharpPids } from '@/deviceIDs'
 import path from 'path'
 const checkDiskSpace = require('check-disk-space')
@@ -161,7 +161,7 @@ export default {
       newTrackPosition: 0,
       showOverlay: true,
       communicating: false,
-      downloadDir: homedir + path.sep + 'pmd-music' + path.sep,
+      downloadDir: path.join(homedir, 'pmd-music') + path.sep,
       downloadFormat: 'FLAC',
       download: false,
       useSonicStageNos: true,
@@ -440,6 +440,7 @@ export default {
       // this.progress = 'Renaming Track: ' + trackNo
       return new Promise((resolve, reject) => {
         trackNo = parseInt(this.renameTrackId, 10)
+        this.renameTrackName = sanitizeName(this.renameTrackName)
         console.log(trackNo + ':' + this.renameTrackName)
 
         let encoder = new TextEncoder('gb2312')
@@ -477,6 +478,7 @@ export default {
     renameDisc: function () {
       return new Promise((resolve, reject) => {
         let title = this.info.title
+        title = sanitizeName(title)
         console.log(title)
         let netmdcli = require('child_process').spawn(netmdcliPath, ['settitle', title])
         netmdcli.on('close', (code) => {
