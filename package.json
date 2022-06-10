@@ -116,6 +116,7 @@
     "fix-path": "^3.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^8.0.0",
+    "iconv": "^3.0.1",
     "jquery": "^3.5.0",
     "music-metadata": "^6.3.7",
     "python-shell": "^2.0.2",

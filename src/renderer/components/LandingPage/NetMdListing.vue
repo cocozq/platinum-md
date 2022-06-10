@@ -140,7 +140,7 @@ const homedir = require('os').homedir()
 const del = require('del')
 const Store = require('electron-store')
 const store = new Store()
-const iconv = require('encoding-japanese')
+// const iconv = require('encoding-japanese')
 export default {
   data () {
     return {
@@ -294,7 +294,13 @@ export default {
         })
         netmdcli.stdout.on('data', data => {
           // buffer output from netmdcli
+          // stringData += data.toString()
+          // console.log(data.toString())
+          // stringData += new TextDecoder('ASCII').decode(data)
+          // stringData += new TextDecoder('UTF-8').decode(data)
+          // stringData += new TextDecoder('SHIFT_JIS').decode(data)
           stringData += new TextDecoder('gb2312').decode(data)
+          // console.log(stringData.match(/[\u3400-\u9FBF]/))
         })
         netmdcli.on('close', (code) => {
           // on exit, process the output data
@@ -316,14 +322,43 @@ export default {
             })
 
             // convert Shift-JIS to utf-8
-            results.forEach((item) => {
-              // item.name = iconv.convert(item.name, {
-              //   to: 'UTF8',
-              //   from: 'SJIS',
-              //   type: 'string'
-              // })
-              console.log(decodeURI(item.name))
-            })
+            // results.forEach((item) => {
+            //   var newName = ''
+            //   var Iconv = require('iconv').Iconv
+            //   var targetCode = 'SHIFT_JIS'
+            //   targetCode = 'GB2312'
+
+            //   var targetCode2 = 'SJIS'
+            //   targetCode2 = 'GBK'
+
+            //   var conv = new Iconv(targetCode, 'ASCII//TRANSLIT//IGNORE')
+
+            //   var enc = new TextEncoder()
+            //   var nameUnitArr = enc.encode(item.name)
+            //   console.log('name unit array: ')
+            //   console.log(nameUnitArr)
+
+            //   var nameBuffer = Buffer.from(item.name)
+            //   console.log('name buffer: ')
+            //   console.log(nameBuffer)
+
+            //   try {
+            //     newName = conv.convert(newNameBuffer)
+            //     console.log('iconv: ' + newName)
+            //   } catch (exp) {
+            //     console.log(exp)
+            //   }
+
+            //   newName = iconv.convert(item.name, {
+            //     to: targetCode2,
+            //     from: 'UTF-8',
+            //     type: 'string'
+            //   })
+            //   console.log('iconv2: ' + newName)
+
+            //   newName = new TextDecoder(targetCode).decode(nameUnitArr)
+            //   console.log('iconv3: ' + newName)
+            // })
 
             this.tracks = results
             console.log(results)
@@ -443,17 +478,18 @@ export default {
         this.renameTrackName = sanitizeName(this.renameTrackName)
         console.log(trackNo + ':' + this.renameTrackName)
 
-        let encoder = new TextEncoder('gb2312')
-        let codes = encoder.encode(this.renameTrackName)
-        let encoding = iconv.detect(codes)
-        console.log(encoding)
-        let convNameArr = iconv.convert(codes, {
-          to: 'SJIS',
-          from: 'gb2312'
-        })
+        // let encoder = new TextEncoder('gb2312')
+        // let codes = encoder.encode(this.renameTrackName)
+        // let encoding = iconv.detect(codes)
+        // console.log(encoding)
+        // let convNameArr = iconv.convert(codes, {
+        //   to: 'SJIS',
+        //   from: 'gb2312'
+        // })
 
-        let newName = iconv.codeToString(convNameArr)
-        console.log(newName)
+        // let newName = iconv.codeToString(convNameArr)
+        // console.log(newName)
+
         let netmdcli = require('child_process').spawn(netmdcliPath, ['rename', trackNo, this.renameTrackName])
         netmdcli.on('close', (code) => {
           console.log(`child process exited with code ${code}`)
