@@ -140,7 +140,7 @@ const homedir = require('os').homedir()
 const del = require('del')
 const Store = require('electron-store')
 const store = new Store()
-// const iconv = require('encoding-japanese')
+const iconv = require('encoding-japanese')
 export default {
   data () {
     return {
@@ -294,12 +294,12 @@ export default {
         })
         netmdcli.stdout.on('data', data => {
           // buffer output from netmdcli
-          // stringData += data.toString()
+          stringData += data.toString()
           // console.log(data.toString())
           // stringData += new TextDecoder('ASCII').decode(data)
           // stringData += new TextDecoder('UTF-8').decode(data)
           // stringData += new TextDecoder('SHIFT_JIS').decode(data)
-          stringData += new TextDecoder('gb2312').decode(data)
+          // stringData += new TextDecoder('gb2312').decode(data)
           // console.log(stringData.match(/[\u3400-\u9FBF]/))
         })
         netmdcli.on('close', (code) => {
@@ -478,17 +478,18 @@ export default {
         this.renameTrackName = sanitizeName(this.renameTrackName)
         console.log(trackNo + ':' + this.renameTrackName)
 
-        // let encoder = new TextEncoder('gb2312')
-        // let codes = encoder.encode(this.renameTrackName)
-        // let encoding = iconv.detect(codes)
-        // console.log(encoding)
-        // let convNameArr = iconv.convert(codes, {
-        //   to: 'SJIS',
-        //   from: 'gb2312'
-        // })
+        let encoder = new TextEncoder('gb2312')
+        let codes = encoder.encode(this.renameTrackName)
+        console.log('encoder: ' + codes)
+        let encoding = iconv.detect(codes)
+        console.log(encoding)
+        let convNameArr = iconv.convert(codes, {
+          to: 'SJIS',
+          from: 'gb2312'
+        })
 
-        // let newName = iconv.codeToString(convNameArr)
-        // console.log(newName)
+        let newName = iconv.codeToString(convNameArr)
+        console.log(newName)
 
         let netmdcli = require('child_process').spawn(netmdcliPath, ['rename', trackNo, this.renameTrackName])
         netmdcli.on('close', (code) => {

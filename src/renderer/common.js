@@ -98,5 +98,15 @@ export function ensureDirSync (dirpath) {
   *Sanitize titles for half-width slot
   */
 export function sanitizeName (name) {
-  return name.normalize('NFD').replace(/[^\x20-\x7F]/g, '')
+  console.log(name)
+  var newName
+  if (/.*[\u4e00-\u9fa5]+.*$/.test(name) || /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/.test(name)) {
+    newName = name
+  } else {
+    newName = name.normalize('NFD')
+    console.log('new name 1: ' + newName)
+    newName = newName.replace(/[^\x20-\x7F]/g, '')
+  }
+  console.log('new name 2: ' + newName)
+  return name
 }
